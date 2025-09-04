@@ -55,6 +55,7 @@
       #5d4a1f 62.5%,
       #5d4a1f 100%
     );
+  --invalid-input-color: #ff6347;
 
   background-color: var(--primary-color);
 }
@@ -250,6 +251,15 @@ a {
   margin-top: 3em;
 }
 
+/* Prevent background highligh and color change after clicking autofill (tested in Chrome) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--secondary-text-color);
+}
+
 form input,
 form textarea {
   display: block;
@@ -304,8 +314,29 @@ textarea {
   margin-bottom: 0.1em;
 }
 
+#form-signup .error-wrapper.invalid {
+  display: block;
+  margin-top: 0.1em;
+  font-size: 0.875em;
+  padding: 0.3em 1em;
+}
+
+#form-signup span.error-wrapper {
+  display: block;
+  margin-bottom: 0.8em;
+}
+
 #form-signup input {
-  margin-bottom: 0.7em;
+  border: none;
+}
+
+#form-signup input.invalid {
+  border: 1.5px solid var(--invalid-input-color);
+}
+
+#form-signup .error-wrapper.invalid {
+  color: var(--invalid-input-color);
+  font-weight: 500;
 }
 
 form button {
@@ -354,6 +385,12 @@ form .join:enabled:hover {
 
 form input::placeholder {
   color: var(--placeholder-text-color);
+}
+
+.general-err-msg {
+  padding: 1em 0;
+  color: var(--invalid-input-color);
+  text-align: center;
 }
 
 /* Footer */
