@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Cyberclub server side build with express",
+  "main": "server.js",
+  "scripts": {
+    "pretty": "prettier --write '**/*.{js,json}'",
+    "dev": "npm run pretty && node --watch server.js",
+    "start": "node server.js"
+  },
+  "author": "Maksim Daniliuk",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "pg": "^8.16.3"
+  }
+}
