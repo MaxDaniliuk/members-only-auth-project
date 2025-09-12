@@ -10,15 +10,15 @@ const signupValidation = () => [
       try {
         const user = await db.selectExistingUser("email", value);
 
-      if (user) {
-        throw new Error("Email already in use.");
-      }
-      return true;
+        if (user) {
+          throw new Error("Email already in use.");
+        }
+        return true;
       } catch (error) {
         if (error.message !== "Email already in use.") {
-          throw new Error("__DB_ERROR__: " + error.message)
+          throw new Error("__DB_ERROR__: " + error.message);
         }
-        throw new Error(error.message)
+        throw new Error(error.message);
       }
     }),
   body("username")
@@ -29,10 +29,10 @@ const signupValidation = () => [
       try {
         const user = await db.selectExistingUser("username", value);
 
-      if (user) {
-        throw new Error("Username already in use.");
-      }
-      return true;
+        if (user) {
+          throw new Error("Username already in use.");
+        }
+        return true;
       } catch (error) {
         if (error.message !== "Username already in use.") {
           throw new Error("__DB_ERROR__: " + error.message);

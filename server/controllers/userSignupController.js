@@ -1,8 +1,11 @@
-const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
+const loginUser = require("../authentication/loginUser");
+const {
+  createHashedPassword,
+} = require("../authentication/passwordController");
 const db = require("../db/queries");
 
-const signupUserPost = async (req, res) => {
+const signupUserPost = async (req, res, next) => {
   const customErrorObj = {
     fullname: null,
     email: null,
@@ -30,25 +33,26 @@ const signupUserPost = async (req, res) => {
     const { fullname, email, username, password, confirmPassword } = req.body;
     const saltLength = 10;
     try {
-      const hashedPassword = await bcrypt.hash(password, saltLength);
+      const hashedPassword = await createHashedPassword(password, saltLength);
+
       await db.createNewUser(fullname, email, username, hashedPassword);
     } catch (error) {
-      throw new Error("User creation failed. Please try again later.")
+      throw new Error("User creation failed. Please try again later.");
     }
-    console.log('User created successfully.');
-    
-    return res
-      .status(201)
-      .json({ errors: null, message: "User created successfully." });
+
+    console.log("User created successfully.");
+    return loginUser(req, res, next);
   } catch (error) {
     console.error("Signup failed", error.message);
     return res.status(500).json({
       errors: {
         ...customErrorObj,
-        generalMessage: error.message ||
+        generalMessage:
+          error.message ||
           "Something went wrong on the server. Please try again later.",
       },
       message: "",
+      user: null,
     });
   }
 };

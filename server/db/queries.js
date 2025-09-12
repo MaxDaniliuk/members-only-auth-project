@@ -1,7 +1,7 @@
 const pool = require("./pool");
 
 async function selectExistingUser(searchCriteria, value) {
-  const query = `SELECT ${searchCriteria} FROM users WHERE ${searchCriteria} = $1`;
+  const query = `SELECT * FROM users WHERE ${searchCriteria} = $1`;
   const { rows } = await pool.query(query, [value]);
   return rows.length > 0 ? rows[0] : null;
 }
