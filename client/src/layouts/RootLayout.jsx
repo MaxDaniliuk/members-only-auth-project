@@ -1,27 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import CustomLink from '../components/CustomLink';
+import Nav from '../components/Nav';
 
 export default function RootLayout() {
   return (
     <div className="root-layout">
-      <header id="header">
-        <nav className="nav">
-          <h1>
-            <CustomLink to="/">CyberClub</CustomLink>
-          </h1>
-          <div className="nav-links">
-            <CustomLink to="members/login">Star</CustomLink>
-            <CustomLink to="/">Posts</CustomLink>
-            <CustomLink to="submit">
-              <div className="add-post">
-                <span className="add">+</span>
-                <span>Create</span>
-              </div>
-            </CustomLink>
-            <CustomLink to="login">Log in</CustomLink>
-          </div>
-        </nav>
-      </header>
+      <Nav />
       <main id="main">
         <Outlet />
       </main>

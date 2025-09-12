@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export default function Signup() {
   const navigate = useNavigate();
+  const { dispatch } = useAuthContext();
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
@@ -236,10 +238,11 @@ export default function Signup() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+    setIsDisabled(true);
     try {
       const res = await fetch('/api/user/signup', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
@@ -272,7 +275,8 @@ export default function Signup() {
       }
 
       console.log('Form submitted successfully!');
-      navigate('/login');
+      dispatch({ type: 'LOGIN', payload: data.user });
+      navigate('/');
     } catch (error) {
       setErrors({
         ...errors,
