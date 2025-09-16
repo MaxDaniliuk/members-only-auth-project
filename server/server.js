@@ -19,7 +19,6 @@ const corsOptions = {
   maxAge: 86400,
 };
 
-// Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,7 +35,11 @@ app.use((err, req, res, next) => {
   console.log("Global epxress error-handler", err);
   res
     .status(500)
-    .json({ errors: null, message: "Something went wrong.", user: null });
+    .json({
+      errors: null,
+      message: err.message || "Something went wrong and submission failed.",
+      user: null,
+    });
 });
 
 app.listen(PORT, () => {

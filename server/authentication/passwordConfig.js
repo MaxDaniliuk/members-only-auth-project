@@ -8,18 +8,19 @@ function initialize(passport) {
       const user = await db.selectExistingUser("username", username);
       if (!user) {
         return done(null, false, {
-          message: "Incorrect username. Please try again.",
+          username: "Incorrect username. Please try again.",
         });
       }
       const isMatch = await comaprePasswords(password, user.password);
       if (!isMatch) {
         return done(null, false, {
-          message: "Incorrect password. Please try again.",
+          password: "Incorrect password. Please try again.",
         });
       }
       const { user_id, ismember, isadmin } = user;
       return done(null, { user_id, ismember, isadmin });
     } catch (error) {
+      error.message = 'Something went wrong on the DB.'
       return done(error);
     }
   };

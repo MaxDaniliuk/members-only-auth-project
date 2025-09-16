@@ -71,7 +71,7 @@ export default function Login() {
 
       if (!res.ok) {
         if (data?.errors) {
-          setErrors(data.errors);
+          setErrors({ ...errors, ...data.errors });
         } else {
           setErrors({
             ...errors,

@@ -13,9 +13,7 @@ const loginUserPost = async (req, res, next) => {
 
     if (!validationObject.isEmpty()) {
       validationObject.array().forEach((error) => {
-        if (error.msg.startsWith("__DB_ERROR__:")) {
-          throw new Error("Database-related error. Please try again later.");
-        } else if (customErrorObj.hasOwnProperty(error.path)) {
+        if (customErrorObj.hasOwnProperty(error.path)) {
           customErrorObj[error.path] = error.msg;
         }
       });
@@ -23,7 +21,6 @@ const loginUserPost = async (req, res, next) => {
       return res.status(400).json({ errors: customErrorObj, message: "" });
     }
 
-    console.log("User logged in successfully.");
     return loginUser(req, res, next);
   } catch (error) {
     console.error("Login failed", error.message);
