@@ -293,10 +293,6 @@ textarea {
   margin-top: 0.3em;
 }
 
-#form-login .login-username {
-  margin-bottom: 1em;
-}
-
 #form-login .login-username > p {
   color: var(--accent-color);
 }
@@ -314,6 +310,7 @@ textarea {
   margin-bottom: 0.1em;
 }
 
+#form-login .error-wrapper.invalid,
 #form-signup .error-wrapper.invalid {
   display: block;
   margin-top: 0.1em;
@@ -321,19 +318,23 @@ textarea {
   padding: 0.3em 1em;
 }
 
+#form-login span.error-wrapper,
 #form-signup span.error-wrapper {
   display: block;
   margin-bottom: 0.8em;
 }
 
+#form-login input,
 #form-signup input {
   border: none;
 }
 
+#form-login input.invalid,
 #form-signup input.invalid {
   border: 1.5px solid var(--invalid-input-color);
 }
 
+#form-login .error-wrapper.invalid,
 #form-signup .error-wrapper.invalid {
   color: var(--invalid-input-color);
   font-weight: 500;
