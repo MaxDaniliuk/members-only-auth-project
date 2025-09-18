@@ -18,7 +18,15 @@ async function createNewUser(fullname, email, username, hashedPassword) {
   ]);
 }
 
+async function createNewPost(user_id, title, post) {
+  const query =
+    "INSERT INTO posts (user_id, title, post) VALUES ($1, $2, $3) RETURNING *";
+  const { rows } = await pool.query(query, [user_id, title, post]);
+  return rows.length > 0 ? rows[0] : null;
+}
+
 module.exports = {
   selectExistingUser,
   createNewUser,
+  createNewPost,
 };

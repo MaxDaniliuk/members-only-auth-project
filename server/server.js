@@ -4,6 +4,7 @@ const cors = require("cors");
 const passport = require("passport");
 const signupRoute = require("./routes/signup");
 const checkAuthRoute = require("./routes/checkAuth");
+const postsRoute = require("./routes/posts");
 const sesssionConfig = require("./authentication/sessionConfig");
 const initializePassport = require("./authentication/passwordConfig");
 
@@ -30,16 +31,15 @@ app.use(passport.session());
 
 app.use("/api", checkAuthRoute);
 app.use("/api", signupRoute);
+app.use("/api", postsRoute);
 
 app.use((err, req, res, next) => {
   console.log("Global epxress error-handler", err);
-  res
-    .status(500)
-    .json({
-      errors: null,
-      message: err.message || "Something went wrong and submission failed.",
-      user: null,
-    });
+  res.status(500).json({
+    errors: null,
+    message: err.message || "Something went wrong and submission failed.",
+    user: null,
+  });
 });
 
 app.listen(PORT, () => {
