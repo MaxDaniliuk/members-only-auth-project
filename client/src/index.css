@@ -284,7 +284,6 @@ textarea {
 .post-field {
   display: flex;
   flex-direction: column;
-  margin-top: 1em;
 }
 
 #form-login input,
@@ -310,6 +309,7 @@ textarea {
   margin-bottom: 0.1em;
 }
 
+#form-create .error-wrapper.invalid,
 #form-login .error-wrapper.invalid,
 #form-signup .error-wrapper.invalid {
   display: block;
@@ -318,22 +318,27 @@ textarea {
   padding: 0.3em 1em;
 }
 
+#form-create span.error-wrapper,
 #form-login span.error-wrapper,
 #form-signup span.error-wrapper {
   display: block;
   margin-bottom: 0.8em;
 }
 
+#form-create input,
 #form-login input,
 #form-signup input {
   border: none;
 }
 
+#form-create input.invalid,
+#form-create textarea.invalid,
 #form-login input.invalid,
 #form-signup input.invalid {
   border: 1.5px solid var(--invalid-input-color);
 }
 
+#form-create .error-wrapper.invalid,
 #form-login .error-wrapper.invalid,
 #form-signup .error-wrapper.invalid {
   color: var(--invalid-input-color);
