@@ -22,7 +22,7 @@ const createUserPost = async (req, res) => {
     }
 
     const { topic, post } = req.body;
-    const { user_id, ismember } = req.user.user_id;
+    const user_id = req.user.user_id;
 
     const postData = await db.createNewPost(user_id, topic, post);
     if (!postData) {
@@ -36,7 +36,6 @@ const createUserPost = async (req, res) => {
       message: "User created and logged in.",
       user: user_id,
     });
-    // Add post to DB
   } catch (error) {
     console.error("Post submission failed: ", error.message);
     return res.status(500).json({
@@ -51,6 +50,11 @@ const createUserPost = async (req, res) => {
   }
 };
 
+const postsGet = (req, res) => {
+  res.status(200).json(res.locals.postsResponse);
+};
+
 module.exports = {
   createUserPost,
+  postsGet,
 };
