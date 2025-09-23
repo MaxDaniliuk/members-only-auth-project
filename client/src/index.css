@@ -165,9 +165,17 @@ a {
 #main {
   padding: 1em 2.5em;
   margin-top: 2.5em;
+  margin-bottom: auto;
+}
+
+.posts-page > span {
+  color: var(--secondary-text-color);
+  display: block;
+  text-align: center;
 }
 
 .post-wrapper {
+  min-width: 225px;
   background-color: var(--secondary-color);
   margin-bottom: 3em;
   padding: 1em;
@@ -211,6 +219,18 @@ a {
 
 .post-text {
   margin-left: 4.4em;
+}
+
+.loading-posts.spin {
+  width: 1.5em;
+  height: auto;
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* expand/collapse part */
@@ -402,7 +422,6 @@ form input::placeholder {
 /* Footer */
 
 #footer {
-  margin-top: auto;
   padding: 0.5em;
   padding-top: 2.5em;
 }
