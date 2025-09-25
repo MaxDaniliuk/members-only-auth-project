@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { usePostsContext } from '../hooks/usePostsContext';
 import Button from '../components/Button';
 
 export default function Create() {
   const navigate = useNavigate();
+  const { dispatch } = usePostsContext();
   const [formData, setFormData] = useState({
     topic: '',
     post: '',
@@ -84,8 +85,8 @@ export default function Create() {
         }
         return;
       }
-      console.log('data: ', data);
-      console.log('Post created');
+
+      dispatch({ type: 'SUCCESS', payload: data });
       navigate('/');
     } catch (error) {
       setErrors({
