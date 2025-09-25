@@ -19,21 +19,20 @@ async function createNewUser(fullname, email, username, hashedPassword) {
 }
 
 async function createNewPost(user_id, title, post) {
-  const query =
-    "INSERT INTO posts (user_id, title, post) VALUES ($1, $2, $3) RETURNING *";
-  const { rows } = await pool.query(query, [user_id, title, post]);
-  return rows.length > 0 ? rows[0] : null;
+  const query = "INSERT INTO posts (user_id, title, post) VALUES ($1, $2, $3)";
+  return await pool.query(query, [user_id, title, post]);
 }
 
 async function selectPostsAuthorized() {
   const query =
-    "SELECT users.username, posts.post_id, posts.title, posts.post, posts.created_at FROM posts INNER JOIN users ON posts.user_id = users.user_id";
+    "SELECT users.username, posts.post_id, posts.title, posts.post, posts.created_at FROM posts INNER JOIN users ON posts.user_id = users.user_id ORDER BY posts.created_at DESC";
   const { rows } = await pool.query(query);
   return rows;
 }
 
 async function selectPostsUnauthorized() {
-  const query = "SELECT post_id, title, post FROM  posts";
+  const query =
+    "SELECT post_id, title, post FROM  posts ORDER BY created_at DESC";
   const { rows } = await pool.query(query);
   return rows;
 }

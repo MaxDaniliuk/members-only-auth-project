@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const db = require("../db/queries");
 
-const createUserPost = async (req, res) => {
+const createUserPost = async (req, res, next) => {
   const customErrorObj = {
     topic: null,
     post: null,
@@ -24,31 +24,35 @@ const createUserPost = async (req, res) => {
     const { topic, post } = req.body;
     const user_id = req.user.user_id;
 
-    const postData = await db.createNewPost(user_id, topic, post);
-    if (!postData) {
-      throw new Error();
-    }
+    await db.createNewPost(user_id, topic, post);
 
     console.log("Post created successfully!");
-    console.log(postData);
-    return res.status(200).json({
-      errors: null,
-      message: "User created and logged in.",
-      user: user_id,
-    });
+    next();
   } catch (error) {
     console.error("Post submission failed: ", error.message);
-    return res.status(500).json({
-      errors: {
-        ...customErrorObj,
-        generalMessage:
-          "Something went wrong on the server. Please try again later.",
-      },
-      message: "",
-      user: null,
-    });
+    error.message = "Post submission failed. Please try again.";
+    next(error);
   }
 };
+
+async function fetchPosts(req, res, next) {
+  try {
+    let posts;
+    let authorized;
+    if (req.isAuthenticated() && req.user.ismember) {
+      posts = await db.selectPostsAuthorized();
+      authorized = true;
+    } else {
+      posts = await db.selectPostsUnauthorized();
+      authorized = false;
+    }
+    res.locals.postsResponse = { authorized, posts };
+    next();
+  } catch (error) {
+    error.message = "Failed to fetch posts...";
+    next(error);
+  }
+}
 
 const postsGet = (req, res) => {
   res.status(200).json(res.locals.postsResponse);
@@ -56,5 +60,6 @@ const postsGet = (req, res) => {
 
 module.exports = {
   createUserPost,
+  fetchPosts,
   postsGet,
 };
