@@ -1,5 +1,5 @@
 const db = require("../../db/queries");
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 
 const signupValidation = () => [
   body("fullname").trim().notEmpty().withMessage("Name can not be empty."),
@@ -49,6 +49,29 @@ const signupValidation = () => [
     }
     return true;
   }),
+  (req, res, next) => {
+    const validationObject = validationResult(req);
+    if (!validationObject.isEmpty()) {
+      const customErrorObj = {
+        fullname: null,
+        email: null,
+        username: null,
+        password: null,
+        confirmPassword: null,
+        generalMessage: null,
+      };
+      validationObject.array().forEach((error) => {
+        if (error.msg.startsWith("__DB_ERROR__:")) {
+          throw new Error("Database-related error. Please try again later.");
+        } else if (customErrorObj.hasOwnProperty(error.path)) {
+          customErrorObj[error.path] = error.msg;
+        }
+      });
+
+      return res.status(400).json({ errors: customErrorObj, message: "" });
+    }
+    next();
+  },
 ];
 
 module.exports = signupValidation;

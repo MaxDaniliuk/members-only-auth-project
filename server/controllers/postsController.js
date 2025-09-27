@@ -1,26 +1,9 @@
-const { validationResult } = require("express-validator");
 const db = require("../db/queries");
+const runMiddleware = require("./runMiddleware");
+const fetchPosts = require("./postsAuthorizationController");
 
 const createUserPost = async (req, res, next) => {
-  const customErrorObj = {
-    topic: null,
-    post: null,
-    generalMessage: null,
-  };
-
   try {
-    const validationObject = validationResult(req);
-
-    if (!validationObject.isEmpty()) {
-      validationObject.array().forEach((error) => {
-        if (customErrorObj.hasOwnProperty(error.path)) {
-          customErrorObj[error.path] = error.msg;
-        }
-      });
-
-      return res.status(400).json({ errors: customErrorObj, message: "" });
-    }
-
     const { topic, post } = req.body;
     const user_id = req.user.user_id;
 
@@ -35,31 +18,16 @@ const createUserPost = async (req, res, next) => {
   }
 };
 
-async function fetchPosts(req, res, next) {
+const getPosts = async (req, res, next) => {
   try {
-    let posts;
-    let authorized;
-    if (req.isAuthenticated() && req.user.ismember) {
-      posts = await db.selectPostsAuthorized();
-      authorized = true;
-    } else {
-      posts = await db.selectPostsUnauthorized();
-      authorized = false;
-    }
-    res.locals.postsResponse = { authorized, posts };
-    next();
+    await runMiddleware(req, res, fetchPosts);
+    res.status(200).json(res.locals.postsResponse);
   } catch (error) {
-    error.message = "Failed to fetch posts...";
     next(error);
   }
-}
-
-const postsGet = (req, res) => {
-  res.status(200).json(res.locals.postsResponse);
 };
 
 module.exports = {
   createUserPost,
-  fetchPosts,
-  postsGet,
+  getPosts,
 };

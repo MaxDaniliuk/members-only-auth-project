@@ -30,14 +30,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/api", checkAuthRoute);
-app.use("/api", signupRoute);
 app.use("/api", postsRoute);
+app.use("/api", signupRoute);
 
 app.use((err, req, res, next) => {
   console.log("Global epxress error-handler", err);
   res.status(500).json({
     errors: null,
-    message: err.message || "Something went wrong and submission failed.",
+    message: err.message || "Something went wrong and procedure failed.",
     user: null,
   });
 });
