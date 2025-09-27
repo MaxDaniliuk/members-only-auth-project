@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { usePostsContext } from '../hooks/usePostsContext';
 import Button from '../components/Button';
 
 export default function Login() {
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
+  const { dispatch: postsDispatch } = usePostsContext();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -35,7 +37,7 @@ export default function Login() {
         ...errors,
         [fieldName]:
           fieldValue === ''
-            ? `${fieldName[0].toUpperCase() + fieldName.slice(1)}`
+            ? `${fieldName[0].toUpperCase() + fieldName.slice(1)} is required.`
             : null,
       };
 
@@ -82,8 +84,8 @@ export default function Login() {
         }
         return;
       }
-      console.log('Form submitted. User logged in.');
       dispatch({ type: 'LOGIN', payload: data.user });
+      postsDispatch({ type: 'SUCCESS', payload: data.postsResponse });
       navigate('/');
     } catch (error) {
       setErrors({

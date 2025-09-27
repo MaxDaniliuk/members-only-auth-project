@@ -1,8 +1,10 @@
 import CustomLink from '../components/CustomLink';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { usePostsContext } from '../hooks/usePostsContext';
 
 export default function Nav() {
   const { user, isLoaded, dispatch } = useAuthContext();
+  const { dispatch: postsDispatch } = usePostsContext();
 
   async function handleLogout() {
     try {
@@ -13,6 +15,7 @@ export default function Nav() {
 
       if (res.ok && result?.logout) {
         dispatch({ type: 'LOGOUT' });
+        postsDispatch({ type: 'SUCCESS', payload: result.postsResponse });
         console.log(result?.message);
         return result?.logout;
       }
