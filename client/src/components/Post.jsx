@@ -1,14 +1,15 @@
+import { format, parseISO } from 'date-fns';
 import noImage from '../assets/images/noImage.jpg';
 
 export default function Post({ post, authorized }) {
-  console.log(`Post ${post.post_id} rendered`);
-  console.log('isAuthorized: ', authorized);
   return (
     <li className="post-wrapper" data-post-id={post.post_id}>
       <div>
         <p className="name">{authorized ? `By ${post.username}` : null}</p>
         <p className="date">
-          {authorized ? `Posted: ${post.created_at}` : null}
+          {authorized
+            ? `Posted: ${format(parseISO(post.created_at), 'yyyy-MM-dd, HH:mm')}`
+            : null}
         </p>
         <div className="post">
           <div className="container-one">
