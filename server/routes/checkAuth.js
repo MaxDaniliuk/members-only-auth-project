@@ -4,10 +4,12 @@ const loginValidation = require("../controllers/validation/loginValidation");
 const memberValidation = require("../controllers/validation/memberValidation");
 const userLoginController = require("../controllers/userLoginController");
 const userLogoutController = require("../controllers/userLogoutController");
+const authorizeUser = require("../controllers/memberAccessController");
 const router = Router();
 
 router.get("/auth/user", getAuthUser);
 router.post("/auth/user/login", loginValidation(), userLoginController);
 router.get("/auth/user/logout", userLogoutController);
+router.patch("/auth/member", memberValidation(), authorizeUser);
 
 module.exports = router;

@@ -37,10 +37,16 @@ async function selectPostsUnauthorized() {
   return rows;
 }
 
+async function updateMembershipStatus(user_id) {
+  const query = "UPDATE users SET ismember = true WHERE user_id = $1";
+  return await pool.query(query, [user_id]);
+}
+
 module.exports = {
   selectExistingUser,
   createNewUser,
   createNewPost,
   selectPostsAuthorized,
   selectPostsUnauthorized,
+  updateMembershipStatus,
 };
