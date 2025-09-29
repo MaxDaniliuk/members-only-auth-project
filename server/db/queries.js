@@ -42,6 +42,11 @@ async function updateMembershipStatus(user_id) {
   return await pool.query(query, [user_id]);
 }
 
+async function deleteUserPost(post_id) {
+  const query = "DELETE FROM posts WHERE post_id = $1";
+  return await pool.query(query, [post_id]);
+}
+
 module.exports = {
   selectExistingUser,
   createNewUser,
@@ -49,4 +54,5 @@ module.exports = {
   selectPostsAuthorized,
   selectPostsUnauthorized,
   updateMembershipStatus,
+  deleteUserPost,
 };

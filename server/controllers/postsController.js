@@ -27,7 +27,24 @@ const getPosts = async (req, res, next) => {
   }
 };
 
+const deleteUserPost = async (req, res, next) => {
+  try {
+    if (!req.isAuthenticated() && !req.user.isadmin) {
+      throw new Error("Access denied. User is not an admin.");
+    }
+    const { post_id } = req.params;
+    await db.deleteUserPost(post_id);
+    console.log(`Post ${post_id} has been deleted successfully!`);
+    return res
+      .status(200)
+      .json({ message: `Post ${post_id} has been deleted successfully!` });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createUserPost,
   getPosts,
+  deleteUserPost,
 };
