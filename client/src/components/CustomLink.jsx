@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 
-export default function CustomLink({ to, children, onClick }) {
+export default function CustomLink({ to, children, onClick, hoverEff }) {
   const location = useLocation();
 
   const handleClick = e => {
@@ -15,7 +15,7 @@ export default function CustomLink({ to, children, onClick }) {
   };
 
   return (
-    <NavLink to={to} onClick={handleClick}>
+    <NavLink className={hoverEff} to={to} onClick={handleClick}>
       {children}
     </NavLink>
   );

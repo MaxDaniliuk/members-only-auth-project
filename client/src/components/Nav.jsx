@@ -1,4 +1,5 @@
 import CustomLink from '../components/CustomLink';
+import StarJoin from '../assets/images/star_join.svg?react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { usePostsContext } from '../hooks/usePostsContext';
 
@@ -34,12 +35,16 @@ export default function Nav() {
         {isLoaded && (
           <div className="nav-links">
             {user && !user?.ismember && (
-              <CustomLink to="members/login">Star</CustomLink>
+              <CustomLink hoverEff="svg-nav-wrapper" to="members/login">
+                <StarJoin className="star-join" />
+              </CustomLink>
             )}
 
-            <CustomLink to="/">Posts</CustomLink>
+            <CustomLink hoverEff="nav-link" to="/">
+              Posts
+            </CustomLink>
             {user && (
-              <CustomLink to="submit">
+              <CustomLink hoverEff="nav-link" to="submit">
                 <div className="add-post">
                   <span className="add">+</span>
                   <span>Create</span>
@@ -47,11 +52,13 @@ export default function Nav() {
               </CustomLink>
             )}
             {user ? (
-              <CustomLink to="/" onClick={handleLogout}>
+              <CustomLink hoverEff="nav-link" to="/" onClick={handleLogout}>
                 Log out
               </CustomLink>
             ) : (
-              <CustomLink to="login">Log in</CustomLink>
+              <CustomLink hoverEff="nav-link" to="login">
+                Log in
+              </CustomLink>
             )}
           </div>
         )}
