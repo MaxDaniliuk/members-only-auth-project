@@ -14,6 +14,7 @@
   font-family: 'Raleway', sans-serif;
   --text-color: #ffffff;
   --secondary-text-color: #e0e0e0;
+  --collapse-expand-btn-color: #e0e0e01a;
   --placeholder-text-color: #e0e0e080;
   --primary-color: #2e3250;
   --secondary-color: #424769;
@@ -240,10 +241,6 @@ a {
   width: 3rem;
 }
 
-.post-text {
-  margin-left: 4.4em;
-}
-
 .loading-posts.spin {
   width: 1.5em;
   height: auto;
@@ -264,6 +261,7 @@ a {
   border: none;
   background: none;
   pointer-events: none;
+  align-self: start;
 }
 
 .trashcan {
@@ -278,15 +276,50 @@ a {
   transform: scale(1.2);
 }
 
-/* expand/collapse part */
-/* .post-text {
-  --max-lines: 5;
+.arrow-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+}
+
+.arrow-btn-wrapper:hover {
+  background-color: var(--collapse-expand-btn-color);
+}
+
+.arrow-btn-wrapper {
+  transition: transform 0s ease-out;
+  transform: rotate(0deg);
+}
+
+.arrow-btn-wrapper.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-arrow {
+  width: 2em;
+  height: auto;
+}
+
+.post-text {
+  cursor: pointer;
+  margin-left: 4.4em;
+  line-height: 1.5;
+}
+
+.post-text.collapsed {
   display: -webkit-box;
+  line-clamp: 5;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--max-lines);
-  line-clamp: var(--max-lines);
   overflow: hidden;
-} */
+}
 
 /* Main, Form section */
 
