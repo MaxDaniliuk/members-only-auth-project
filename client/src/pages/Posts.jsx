@@ -3,12 +3,12 @@ import Loading from '../assets/images/loading.svg?react';
 import { usePostsContext } from '../hooks/usePostsContext';
 
 export default function Posts() {
-  const { postsState, dispatch } = usePostsContext();
+  const { postsState } = usePostsContext();
 
   return (
     <section className="posts-page">
       {postsState.loading ? (
-        <span className="loading-posts">
+        <span>
           <Loading className="loading-posts spin" />
         </span>
       ) : postsState.error ? (

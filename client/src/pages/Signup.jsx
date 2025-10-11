@@ -13,7 +13,6 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
   });
-
   const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({
     fullname: null,
@@ -270,7 +269,6 @@ export default function Signup() {
               'Unexpected server response. Please try again later.',
           });
         }
-        setIsDisabled(true);
         return;
       }
 
@@ -292,10 +290,9 @@ export default function Signup() {
       <div className="form-wrapper">
         <form
           autoComplete="off"
-          action="/api/user/signup"
           method="POST"
           id="form-signup"
-          onSubmit={e => handleSubmit(e)}
+          onSubmit={handleSubmit}
         >
           <div className="welcome-block">
             <h1>Create a new account</h1>
@@ -309,7 +306,7 @@ export default function Signup() {
             name="fullname"
             id="signup-fullname"
             placeholder="Full Name"
-            onChange={e => validateFullnameOnChange(e)}
+            onChange={validateFullnameOnChange}
           />
           <span
             className={
@@ -325,7 +322,7 @@ export default function Signup() {
             name="email"
             id="signup-email"
             placeholder="Email"
-            onChange={e => validateEmailOnChange(e)}
+            onChange={validateEmailOnChange}
           />
 
           <span
@@ -341,7 +338,7 @@ export default function Signup() {
             name="username"
             id="signup-username"
             placeholder="Username"
-            onChange={e => validateUsernameOnChange(e)}
+            onChange={validateUsernameOnChange}
           />
 
           <span
@@ -359,7 +356,7 @@ export default function Signup() {
             name="password"
             id="signup-password"
             placeholder="Password"
-            onChange={e => validatePasswordOnChange(e)}
+            onChange={validatePasswordOnChange}
           />
 
           <span
@@ -377,8 +374,8 @@ export default function Signup() {
             name="confirmPassword"
             id="signup-confirm-password"
             placeholder="Confirm password"
-            onChange={e => validatePasswordConfirmationOnChange(e)}
-            onBlur={e => validatePasswordConfirmationOnBlur(e)}
+            onChange={validatePasswordConfirmationOnChange}
+            onBlur={validatePasswordConfirmationOnBlur}
           />
 
           <span

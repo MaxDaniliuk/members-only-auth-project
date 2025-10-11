@@ -64,15 +64,10 @@ export default function JoinTheClub() {
         }
         return;
       }
-      // console.log("Passcode is correct. Welcome to the members' club!");
-      // dispatch({ type: 'LOGIN', payload: data.user });
-      // navigate('/');
+
       dispatch({ type: 'LOGIN', payload: data.user });
       postsDispatch({ type: 'SUCCESS', payload: data.postsResponse });
       navigate('/');
-
-      // Set authContext state
-      // Set postsContext state
     } catch (error) {
       setError('Something went wrong. Please try again.');
     }
@@ -81,7 +76,6 @@ export default function JoinTheClub() {
   return (
     <section className="join-page">
       <div className="form-wrapper">
-        {/* methid post or update? */}
         <form
           autoComplete="off"
           method="PATCH"

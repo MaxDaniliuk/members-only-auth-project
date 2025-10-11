@@ -20,7 +20,7 @@ function initialize(passport) {
       const { user_id, ismember, isadmin } = user;
       return done(null, { user_id, ismember, isadmin });
     } catch (error) {
-      error.message = 'Something went wrong on the DB.'
+      error.message = "Something went wrong on the DB.";
       return done(error);
     }
   };

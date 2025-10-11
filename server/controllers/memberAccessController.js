@@ -17,7 +17,6 @@ async function authorizeUser(req, res, next) {
       });
     }
     throw new Error("Not authenticated. Access denied.");
-
   } catch (error) {
     next(error);
   }
