@@ -34,7 +34,7 @@ export default function Navbar() {
 
   async function handleLogout() {
     try {
-      const res = await fetch('api/auth/user/logout', {
+      const res = await fetch('/api/auth/user/logout', {
         credentials: 'include',
       });
       const result = await res.json();
@@ -42,7 +42,6 @@ export default function Navbar() {
       if (res.ok && result?.logout) {
         dispatch({ type: 'LOGOUT' });
         postsDispatch({ type: 'SUCCESS', payload: result.postsResponse });
-        console.log(result?.message);
         return result?.logout;
       }
     } catch (error) {

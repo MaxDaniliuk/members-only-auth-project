@@ -100,8 +100,8 @@ a {
 
 .svg-nav-wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: start;
 }
 
 .star-join {
@@ -172,7 +172,6 @@ a {
   padding: 1rem;
   padding-bottom: 1.5rem;
   align-items: center;
-  justify-content: center;
 }
 
 .navigation-wrapper {
@@ -251,6 +250,45 @@ a {
   margin-bottom: auto;
 }
 
+.error-page {
+  display: flex;
+  justify-content: center;
+}
+
+.error-page > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.error-page .notfound-status {
+  color: var(--accent-color);
+  font-size: 4rem;
+}
+
+.error-page a {
+  display: block;
+  padding: 0.7em 1.5em;
+  color: var(--secondary-text-color);
+}
+
+.error-page button {
+  width: fit-content;
+  outline: none;
+  border: 1px solid var(--secondary-text-color);
+  background-color: transparent;
+  border-radius: 2px;
+  display: block;
+}
+
+.error-page a:hover {
+  color: var(--accent-color);
+}
+
+.error-page button:hover {
+  border: 1px solid var(--accent-color);
+}
+
 .posts-page > span {
   color: var(--secondary-text-color);
   display: block;
@@ -298,6 +336,11 @@ a {
 .logo-container .logo {
   border-radius: 50%;
   width: 3rem;
+}
+
+.protected-route-loading {
+  width: 100%;
+  text-align: center;
 }
 
 .loading-posts.spin {
@@ -559,6 +602,7 @@ form input::placeholder {
 /* Footer */
 
 #footer {
+  font-family: 'Oswald', sans-serif;
   padding: 0.5em;
   padding-top: 2.5em;
 }
