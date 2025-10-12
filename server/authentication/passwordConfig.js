@@ -1,5 +1,5 @@
 const LocalStrategy = require("passport-local").Strategy;
-const { comaprePasswords } = require("./passwordController");
+const { comparePasswords } = require("./passwordController");
 const db = require("../db/queries");
 
 function initialize(passport) {
@@ -11,7 +11,7 @@ function initialize(passport) {
           username: "Incorrect username. Please try again.",
         });
       }
-      const isMatch = await comaprePasswords(password, user.password);
+      const isMatch = await comparePasswords(password, user.password);
       if (!isMatch) {
         return done(null, false, {
           password: "Incorrect password. Please try again.",

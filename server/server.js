@@ -5,7 +5,7 @@ const passport = require("passport");
 const signupRoute = require("./routes/signup");
 const checkAuthRoute = require("./routes/checkAuth");
 const postsRoute = require("./routes/posts");
-const sesssionConfig = require("./authentication/sessionConfig");
+const sessionConfig = require("./authentication/sessionConfig");
 const initializePassport = require("./authentication/passwordConfig");
 
 const PORT = process.env.PORT;
@@ -23,7 +23,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(sesssionConfig);
+app.use(sessionConfig);
 
 initializePassport(passport);
 app.use(passport.initialize());
