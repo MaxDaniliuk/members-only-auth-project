@@ -69,6 +69,14 @@ h3 {
   color: var(--text-color);
 }
 
+h1 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.175rem;
+}
+
 p,
 label {
   color: var(--secondary-text-color);
@@ -159,6 +167,7 @@ a {
   position: sticky;
   -webkit-position: sticky;
   top: 0;
+  z-index: 2;
 }
 
 #header nav h1 {
@@ -296,7 +305,7 @@ a {
 }
 
 .post-wrapper {
-  min-width: 225px;
+  min-width: 250px;
   background-color: var(--secondary-color);
   margin-bottom: 3em;
   padding: 1em;
@@ -410,6 +419,7 @@ a {
 }
 
 .post-text {
+  font-size: 0.9rem;
   cursor: pointer;
   margin-left: 4.4em;
   line-height: 1.5;
@@ -628,4 +638,26 @@ form input::placeholder {
 
 .footer-wrapper svg {
   width: 0.875em;
+}
+
+@media (min-width: 1200px) {
+  :root {
+    font-size: 21px;
+  }
+  button,
+  input,
+  textarea {
+    font-size: inherit;
+  }
+}
+
+@media (min-width: 2000px) {
+  :root {
+    font-size: 27px;
+  }
+  button,
+  input,
+  textarea {
+    font-size: inherit;
+  }
 }
