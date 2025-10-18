@@ -1,4 +1,4 @@
-const db = require("../db/queries");
+const prisma = require("../db/prisma");
 const runMiddleware = require("./runMiddleware");
 const fetchPosts = require("./postsAuthorizationController");
 
@@ -7,7 +7,7 @@ const createUserPost = async (req, res, next) => {
     const { topic, post } = req.body;
     const user_id = req.user.user_id;
 
-    await db.createNewPost(user_id, topic, post);
+    await prisma.createPost(user_id, topic, post);
 
     console.log("Post created successfully!");
     next();
@@ -33,7 +33,7 @@ const deleteUserPost = async (req, res, next) => {
       throw new Error("Access denied. User is not an admin.");
     }
     const { post_id } = req.params;
-    await db.deleteUserPost(post_id);
+    await prisma.deletePost(Number(post_id));
     console.log(`Post ${post_id} has been deleted successfully!`);
     return res
       .status(200)

@@ -1,10 +1,9 @@
-const { validationResult } = require("express-validator");
 const loginUser = require("../authentication/loginUser");
 const runMiddleware = require("./runMiddleware");
 const {
   createHashedPassword,
 } = require("../authentication/passwordController");
-const db = require("../db/queries");
+const prisma = require("../db/prisma");
 
 const signupUserContoller = async (req, res, next) => {
   try {
@@ -12,8 +11,7 @@ const signupUserContoller = async (req, res, next) => {
     const saltLength = 10;
     try {
       const hashedPassword = await createHashedPassword(password, saltLength);
-
-      await db.createNewUser(fullname, email, username, hashedPassword);
+      await prisma.createUser(fullname, email, username, hashedPassword);
     } catch (error) {
       throw new Error("User creation failed. Please try again later.");
     }
