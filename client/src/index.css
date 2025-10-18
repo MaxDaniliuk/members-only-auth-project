@@ -421,7 +421,7 @@ a {
 .post-text {
   font-size: 0.9rem;
   cursor: pointer;
-  margin-left: 4.4em;
+  margin-left: 5em;
   line-height: 1.5;
 }
 
@@ -638,6 +638,12 @@ form input::placeholder {
 
 .footer-wrapper svg {
   width: 0.875em;
+}
+
+@media (max-width: 525px) {
+  .post-text {
+    margin: 0;
+  }
 }
 
 @media (min-width: 1200px) {
