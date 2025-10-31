@@ -1,11 +1,11 @@
 const LocalStrategy = require("passport-local").Strategy;
 const { comparePasswords } = require("./passwordController");
-const db = require("../db/queries");
+const prisma = require("../db/prisma");
 
 function initialize(passport) {
   const authenticateUser = async (username, password, done) => {
     try {
-      const user = await db.selectExistingUser("username", username);
+      const user = await prisma.findUser("username", username);
       if (!user) {
         return done(null, false, {
           username: "Incorrect username. Please try again.",
@@ -29,7 +29,7 @@ function initialize(passport) {
   passport.serializeUser((user, done) => done(null, user.user_id));
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await db.selectExistingUser("user_id", id);
+      const user = await prisma.findUser("user_id", id);
       const { user_id, ismember, isadmin } = user;
       done(null, { user_id, ismember, isadmin });
     } catch (error) {

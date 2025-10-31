@@ -1,11 +1,11 @@
-const db = require("../db/queries");
+const prisma = require("../db/prisma");
 const runMiddleware = require("./runMiddleware");
 const fetchPosts = require("./postsAuthorizationController");
 
 async function authorizeUser(req, res, next) {
   try {
     if (req.isAuthenticated()) {
-      await db.updateMembershipStatus(req.user.user_id);
+      await prisma.updateMembershipStatus(req.user.user_id);
       req.user.ismember = true;
       await runMiddleware(req, res, fetchPosts);
       console.log("Member status changed: ", req.user);
