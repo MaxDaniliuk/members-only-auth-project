@@ -2,11 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
-const signupRoute = require("./routes/signup");
-const checkAuthRoute = require("./routes/checkAuth");
-const postsRoute = require("./routes/posts");
-const sessionConfig = require("./authentication/sessionConfig");
-const initializePassport = require("./authentication/passwordConfig");
+
+const postRoutes = require("./routes/postRoutes");
+const authRoutes = require("./routes/authRoutes");
+const signupRoutes = require("./routes/signupRoutes");
+
+const sessionConfig = require("./config/session");
+const initializePassport = require("./config/passport");
 
 const PORT = process.env.PORT;
 const app = express();
@@ -29,9 +31,9 @@ initializePassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api", checkAuthRoute);
-app.use("/api", postsRoute);
-app.use("/api", signupRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api", postRoutes);
+app.use("/api/users", signupRoutes);
 
 app.use((err, req, res, next) => {
   console.log("Global epxress error-handler", err);

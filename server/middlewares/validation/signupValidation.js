@@ -1,4 +1,4 @@
-const prisma = require("../../db/prisma");
+const userRepository = require("../../repositories/userRepository");
 const { body, validationResult } = require("express-validator");
 
 const signupValidation = () => [
@@ -8,7 +8,7 @@ const signupValidation = () => [
     .withMessage("Not a valid e-mail address")
     .custom(async (value) => {
       try {
-        const user = await prisma.findUser("email", value);
+        const user = await userRepository.findUser("email", value);
 
         if (user) {
           throw new Error("Email already in use.");
@@ -27,7 +27,7 @@ const signupValidation = () => [
     .withMessage("Username can not be empty.")
     .custom(async (value) => {
       try {
-        const user = await prisma.findUser("username", value);
+        const user = await userRepository.findUser("username", value);
 
         if (user) {
           throw new Error("Username already in use.");

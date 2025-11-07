@@ -1,4 +1,4 @@
-async function runMiddleware(req, res, fn) {
+async function useMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
     try {
       fn(req, res, (err) => {
@@ -11,4 +11,4 @@ async function runMiddleware(req, res, fn) {
   });
 }
 
-module.exports = runMiddleware;
+module.exports = useMiddleware;
