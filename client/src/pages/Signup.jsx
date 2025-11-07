@@ -239,7 +239,7 @@ export default function Signup() {
     e.preventDefault();
     setIsDisabled(true);
     try {
-      const res = await fetch('/api/user/signup', {
+      const res = await fetch('/api/users/signup', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

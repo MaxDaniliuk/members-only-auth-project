@@ -25,7 +25,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     async function checkAuthStatus() {
       try {
-        const res = await fetch('/api/auth/user', { credentials: 'include' });
+        const res = await fetch('/api/auth', { credentials: 'include' });
         const user = await res.json();
         dispatch({ type: 'LOADED', payload: user });
       } catch (error) {

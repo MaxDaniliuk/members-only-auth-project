@@ -34,7 +34,7 @@ export default function Post({ post, authorized }) {
   async function deletePost() {
     const post_id = post.post_id;
     try {
-      const res = await fetch(`/api/delete/posts/${post_id}`, {
+      const res = await fetch(`/api/posts/${post_id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

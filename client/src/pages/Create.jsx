@@ -7,12 +7,12 @@ export default function Create() {
   const navigate = useNavigate();
   const { dispatch } = usePostsContext();
   const [formData, setFormData] = useState({
-    topic: '',
+    title: '',
     post: '',
   });
   const [isDisabled, setIsDisabled] = useState(true);
   const [errors, setErrors] = useState({
-    topic: null,
+    title: null,
     post: null,
     generalMessage: null,
   });
@@ -26,7 +26,7 @@ export default function Create() {
   }
 
   function returnErrorMsg(fieldName) {
-    if (fieldName === 'topic') return `Post must have a title.`;
+    if (fieldName === 'title') return `Post must have a title.`;
     return `What would you like to share?`;
   }
 
@@ -54,7 +54,7 @@ export default function Create() {
     setIsDisabled(true);
 
     try {
-      const res = await fetch('/api/user/create/post', {
+      const res = await fetch('/api/post', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -108,23 +108,23 @@ export default function Create() {
           onSubmit={handleSubmit}
         >
           <h1>Create a new post</h1>
-          <label htmlFor="topic">
-            Topic title:
+          <label htmlFor="title">
+            Post title:
             <input
-              className={errors.topic ? 'invalid' : ''}
+              className={errors.title ? 'invalid' : ''}
               autoComplete="off"
               type="text"
-              id="topic"
-              name="topic"
+              id="title"
+              name="title"
               minLength={1}
               maxLength={35}
               onChange={handleOnChange}
             />
           </label>
           <span
-            className={errors.topic ? 'error-wrapper invalid' : 'error-wrapper'}
+            className={errors.title ? 'error-wrapper invalid' : 'error-wrapper'}
           >
-            {errors.topic}
+            {errors.title}
           </span>
           <div className="post-field">
             <label htmlFor="textarea">Post content: </label>

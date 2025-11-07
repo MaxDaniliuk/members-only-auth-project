@@ -34,7 +34,7 @@ export default function Navbar() {
 
   async function handleLogout() {
     try {
-      const res = await fetch('/api/auth/user/logout', {
+      const res = await fetch('/api/auth/logout', {
         credentials: 'include',
       });
       const result = await res.json();
