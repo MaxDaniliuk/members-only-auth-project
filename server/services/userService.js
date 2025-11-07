@@ -27,7 +27,7 @@ exports.getDashboardData = async (isAuthenticated, user) => {
 
 exports.promoteToMember = async (isAuthenticated, user) => {
   await userRepository.updateMembershipStatus(user?.user_id);
-  
+
   if (user) {
     user.ismember = true;
   }

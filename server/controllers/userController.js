@@ -48,7 +48,7 @@ exports.authorizeUser = async (req, res, next) => {
       req.user,
     );
     console.log("Member status changed: ", req.user);
-    res.json({ errors: null, ... data });
+    res.json({ errors: null, ...data });
   } catch (error) {
     next(error);
   }

@@ -29,8 +29,8 @@ exports.createPost = async (req, res, next) => {
     res.json(data);
   } catch (error) {
     if (error.message !== "Post submission failed. Please try again.") {
-      error.message = "Failed to fetch posts."
-    }   
+      error.message = "Failed to fetch posts.";
+    }
     next(error);
   }
 };
@@ -45,7 +45,8 @@ exports.deletePost = async (req, res, next) => {
     console.log(`Post ${post_id} has been deleted successfully!`);
     res.json({ message: `Post ${post_id} has been deleted successfully!` });
   } catch (error) {
-    if (error.message !== "Access denied. Admins only."); {
+    if (error.message !== "Access denied. Admins only.");
+    {
       error.message = `Failed to delete the post ${post_id}`;
     }
     next(error);

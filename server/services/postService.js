@@ -26,4 +26,4 @@ exports.addNewPost = async (user_id, title, post) => {
 
 exports.deletePostById = async (post_id) => {
   return await postRepository.deletePost(post_id);
-}
+};
