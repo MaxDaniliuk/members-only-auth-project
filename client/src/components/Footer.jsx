@@ -5,7 +5,7 @@ export default function Footer() {
         <span>©</span>
         <span>{new Date().getFullYear()}</span>
         <a
-          href=""
+          href="https://github.com/MaxDaniliuk/members-only-auth-project"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="(Opens in a new tab)"
