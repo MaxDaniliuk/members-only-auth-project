@@ -10,7 +10,6 @@ export const authReducer = (state, action) => {
       return { ...state, user: null };
     case 'LOADED':
       return { ...state, user: action.payload, isLoaded: true };
-    // ....
     default:
       return state;
   }
@@ -36,8 +35,6 @@ export const AuthContextProvider = ({ children }) => {
 
     checkAuthStatus();
   }, []);
-
-  console.log('AuthContext state:', state);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
