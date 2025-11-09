@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { usePostsContext } from '../hooks/usePostsContext';
-import Button from '../components/Button';
+import { useMutation } from '@tanstack/react-query';
 
 export default function Login() {
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
-  const { dispatch: postsDispatch } = usePostsContext();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -19,17 +17,39 @@ export default function Login() {
     generalMessage: null,
   });
 
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: data => {
+      dispatch({ type: 'LOGIN', payload: data.user });
+      navigate('/');
+    },
+    onError: error => {
+      if (error?.errors) {
+        setErrors(prevState => ({
+          ...prevState,
+          ...error?.errors,
+        }));
+      } else {
+        setErrors(prevState => ({
+          ...prevState,
+          generalMessage:
+            error.message || 'Something went wrong. Please try again later.',
+        }));
+      }
+    },
+  });
+
   function confirmFieldsValidity(latestFormData) {
-    const allFielsFilled = Object.values(latestFormData).every(
+    const allFilled = Object.values(latestFormData).every(
       field => field.trim() !== '',
     );
-
-    setIsDisabled(!allFielsFilled);
+    setIsDisabled(!allFilled);
   }
 
   function handleOnChange(e) {
     const fieldValue = e.target.value.trim();
     const fieldName = e.target.name;
+
     setFormData(prevState => {
       const updatedField = { ...prevState, [fieldName]: fieldValue };
 
@@ -51,50 +71,8 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsDisabled(true);
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch (error) {
-        setErrors({
-          ...errors,
-          generalMessage:
-            'Unexpected response from server. Please try again later.',
-        });
-        return;
-      }
-
-      if (!res.ok) {
-        if (data?.errors) {
-          setErrors({ ...errors, ...data.errors });
-        } else {
-          setErrors({
-            ...errors,
-            generalMessage:
-              data?.message ||
-              'Unexpected server response. Please try again later.',
-          });
-        }
-        return;
-      }
-      dispatch({ type: 'LOGIN', payload: data.user });
-      postsDispatch({ type: 'SUCCESS', payload: data.postsResponse });
-      navigate('/');
-    } catch (error) {
-      setErrors({
-        ...errors,
-        generalMessage:
-          error.message ||
-          'Could not connect to the server. Please check your internet connection.',
-      });
-    }
+    setErrors(prevState => ({ ...prevState, generalMessage: null }));
+    mutation.mutate(formData);
   }
 
   return (
@@ -117,9 +95,7 @@ export default function Login() {
               onChange={handleOnChange}
             />
             <span
-              className={
-                errors.username ? 'error-wrapper invalid' : 'error-wrapper'
-              }
+              className={`error-wrapper ${errors.username ? 'invalid' : ''}`}
             >
               {errors.username}
             </span>
@@ -135,16 +111,14 @@ export default function Login() {
               onChange={handleOnChange}
             />
             <span
-              className={
-                errors.password ? 'error-wrapper invalid' : 'error-wrapper'
-              }
+              className={`error-wrapper ${errors.password ? 'invalid' : ''}`}
             >
               {errors.password}
             </span>
           </div>
-          <Button specClass={'signin'} disabled={isDisabled}>
-            Sign in
-          </Button>
+          <button className="signin" type="submit" disabled={isDisabled}>
+            {mutation.isPending ? 'Signing in...' : 'Sign in'}
+          </button>
           {errors.generalMessage && (
             <p className="general-err-msg">{errors.generalMessage}</p>
           )}
@@ -158,4 +132,27 @@ export default function Login() {
       </div>
     </section>
   );
+}
+
+async function loginUser({ username, password }) {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+
+  const data = await res.json().catch(() => {
+    throw new Error('Unexpected response from server. Please try again later.');
+  });
+
+  if (!res.ok) {
+    throw {
+      message:
+        data?.message || 'Unexpected server response. Please try again later.',
+      errors: data?.errors || null,
+    };
+  }
+
+  return data;
 }

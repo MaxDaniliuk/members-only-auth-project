@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePostsContext } from '../hooks/usePostsContext';
-import Button from '../components/Button';
+import { useMutation } from '@tanstack/react-query';
 
 export default function Create() {
   const navigate = useNavigate();
-  const { dispatch } = usePostsContext();
   const [formData, setFormData] = useState({
     title: '',
     post: '',
@@ -15,6 +13,25 @@ export default function Create() {
     title: null,
     post: null,
     generalMessage: null,
+  });
+
+  const mutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => navigate('/'),
+    onError: error => {
+      if (error?.errors) {
+        setErrors(prevState => ({
+          ...prevState,
+          ...error?.errors,
+        }));
+      } else {
+        setErrors(prevState => ({
+          ...prevState,
+          generalMessage:
+            error.message || 'Something went wrong. Please try again later.',
+        }));
+      }
+    },
   });
 
   function confirmFieldsValidity(latestFormData) {
@@ -52,50 +69,8 @@ export default function Create() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsDisabled(true);
-
-    try {
-      const res = await fetch('/api/post', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      let data;
-      try {
-        data = await res.json();
-      } catch (error) {
-        setErrors({
-          ...errors,
-          generalMessage:
-            'Unexpected response from server. Please try again later.',
-        });
-        return;
-      }
-
-      if (!res.ok) {
-        if (data?.errors) {
-          setErrors({ ...errors, ...data.errors });
-        } else {
-          setErrors({
-            ...errors,
-            generalMessage:
-              data?.message ||
-              'Unexpected server response. Please try again later.',
-          });
-        }
-        return;
-      }
-
-      dispatch({ type: 'SUCCESS', payload: data });
-      navigate('/');
-    } catch (error) {
-      setErrors({
-        ...errors,
-        generalMessage:
-          error.message ||
-          'Could not connect to the server. Please check your internet connection.',
-      });
-    }
+    setErrors(prevState => ({ ...prevState, generalMessage: null }));
+    mutation.mutate(formData);
   }
 
   return (
@@ -121,9 +96,7 @@ export default function Create() {
               onChange={handleOnChange}
             />
           </label>
-          <span
-            className={errors.title ? 'error-wrapper invalid' : 'error-wrapper'}
-          >
+          <span className={`error-wrapper ${errors.title ? 'invalid' : ''}`}>
             {errors.title}
           </span>
           <div className="post-field">
@@ -136,14 +109,12 @@ export default function Create() {
               onChange={handleOnChange}
             ></textarea>
           </div>
-          <span
-            className={errors.post ? 'error-wrapper invalid' : 'error-wrapper'}
-          >
+          <span className={`error-wrapper ${errors.post ? 'invalid' : ''}`}>
             {errors.post}
           </span>
-          <Button specClass={'submit'} disabled={isDisabled}>
-            Publish
-          </Button>
+          <button className="submit" type="submit" disabled={isDisabled}>
+            {mutation.isPending ? 'Uploading...' : 'Publish'}
+          </button>
           {errors.generalMessage && (
             <p className="general-err-msg">{errors.generalMessage}</p>
           )}
@@ -151,4 +122,27 @@ export default function Create() {
       </div>
     </section>
   );
+}
+
+async function createPost({ title, post }) {
+  const res = await fetch('/api/post', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, post }),
+  });
+
+  const data = await res.json().catch(() => {
+    throw new Error('Unexpected server response. Please try again later.');
+  });
+
+  if (!res.ok) {
+    throw {
+      message:
+        data?.message || 'Unexpected server response. Please try again later.',
+      errors: data?.errors || null,
+    };
+  }
+
+  return data;
 }

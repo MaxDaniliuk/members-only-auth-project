@@ -3,12 +3,10 @@ import DropdownButton from '../assets/images/hamburger-button.svg?react';
 import CloseDropdownButton from '../assets/images/close-nav-button.svg?react';
 import CustomLink from './CustomLink';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { usePostsContext } from '../hooks/usePostsContext';
 import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const { user, isLoaded, dispatch } = useAuthContext();
-  const { dispatch: postsDispatch } = usePostsContext();
   const [dropdownMode, setdropdownMode] = useState(true);
   const [dropdownOpened, setDropdownOpened] = useState(false);
 
@@ -41,7 +39,6 @@ export default function Navbar() {
 
       if (res.ok && result?.logout) {
         dispatch({ type: 'LOGOUT' });
-        postsDispatch({ type: 'SUCCESS', payload: result.postsResponse });
         return result?.logout;
       }
     } catch (error) {

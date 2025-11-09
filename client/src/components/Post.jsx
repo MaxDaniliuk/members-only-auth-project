@@ -1,17 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { usePostsContext } from '../hooks/usePostsContext';
 import noImage from '../assets/images/noImage.jpg';
 import Trashcan from '../assets/images/trashcan.svg?react';
 import DrowdownArrow from '../assets/images/dropdown_arrow.svg?react';
 
-export default function Post({ post, authorized }) {
-  const { user } = useAuthContext();
-  const { postsState, dispatch: postsDispatch } = usePostsContext();
+export default function Post({ post, user }) {
   const [collapsed, setCollapsed] = useState(false);
   const [btnRequired, setBtnRequired] = useState(false);
   const postTextRef = useRef(null);
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: deletePostById,
+    onSuccess: (_, post_id) => {
+      queryClient.setQueryData(['posts'], oldData => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          posts: oldData.posts.filter(p => p.post_id !== post_id),
+        };
+      });
+    },
+    onError: error => {
+      console.error(error.message);
+    },
+  });
 
   useEffect(() => {
     if (postTextRef.current) {
@@ -32,55 +46,17 @@ export default function Post({ post, authorized }) {
   }
 
   async function deletePost() {
-    const post_id = post.post_id;
-    try {
-      const res = await fetch(`/api/posts/${post_id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch (error) {
-        console.error(
-          'Unexpected response from server. Please try again later.',
-        );
-        return;
-      }
-      if (!res.ok) {
-        if (data?.message) {
-          console.error(data.message);
-        } else {
-          console.error(
-            'Unexpected response from server. Please try again later.',
-          );
-        }
-        return;
-      }
-
-      console.log(data.message);
-      postsDispatch({
-        type: 'SUCCESS',
-        payload: {
-          authorized,
-          posts: postsState.postsResponse.posts.filter(
-            post => post.post_id !== post_id,
-          ),
-        },
-      });
-    } catch (error) {
-      console.error('Unexpected server response. Please try again later.');
-      return;
-    }
+    mutation.mutate(post.post_id);
   }
 
   return (
     <li className="post-wrapper" data-post-id={post.post_id}>
       <div>
-        {authorized && <p className="name">{`By ${post.username}`}</p>}
-        {authorized && (
-          <p className="date">{`Posted: ${format(parseISO(post.created_at), 'yyyy-MM-dd, HH:mm')}`}</p>
+        {user?.ismember && <p className="name">{`By ${post.username}`}</p>}
+        {user?.ismember && post?.created_at && (
+          <p className="date">
+            {`Posted: ${format(parseISO(post.created_at), 'yyyy-MM-dd, HH:mm')}`}
+          </p>
         )}
         <div className="post">
           <div className="container-one">
@@ -114,4 +90,21 @@ export default function Post({ post, authorized }) {
       )}
     </li>
   );
+}
+
+async function deletePostById(post_id) {
+  const res = await fetch(`/api/posts/${post_id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  const data = await res.json().catch(() => {
+    throw new Error('Unexpected response from server. Please try again later.');
+  });
+
+  if (!res.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
 }
