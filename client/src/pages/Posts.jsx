@@ -18,11 +18,11 @@ export default function Posts() {
         </span>
       ) : error ? (
         <span>{error.message}</span>
-      ) : data.posts.length < 1 ? (
+      ) : data?.posts.length < 1 ? (
         <p>There are no posts yet!</p>
       ) : (
         <ul className="posts">
-          {data.posts.map(post => (
+          {data?.posts.map(post => (
             <Post key={post.post_id} post={post} user={user} />
           ))}
         </ul>
@@ -35,11 +35,11 @@ const fetchPosts = async () => {
   const res = await fetch('/api/');
 
   const data = await res.json().catch(() => {
-    throw new Error('Error occured. Failed to fetch posts.');
+    throw new Error('Unexpected server response. Failed to fetch posts.');
   });
 
   if (!res.ok) {
-    throw new Error('Something went wrong. Failed to fetch the posts.');
+    throw new Error('Failed to fetch posts. Please try again later.');
   }
   return data;
 };
