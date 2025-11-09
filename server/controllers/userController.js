@@ -1,17 +1,58 @@
+const passport = require("passport");
 const userService = require("../services/userService");
-const useMiddleware = require("../utils/useMiddleware");
-const loginUser = require("../middlewares/auth/loginUser");
+
+function loginUserAfterSigningUp(req, res, next) {
+  return new Promise((resolve, reject) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) return reject(err);
+      if (!user) return reject({ status: 400, info });
+
+      req.login(user, (err) => {
+        if (err) return reject(err);
+        console.log("User logged in signing up.");
+        resolve(user);
+      });
+    })(req, res, next);
+  });
+}
+
+exports.loginUser = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+
+    if (!user)
+      return res.status(400).json({ errors: info, message: null, user: null });
+
+    req.login(user, (err) => {
+      if (err) return next(err);
+
+      console.log("User logged in.");
+      return res.json({ user: req.user });
+    });
+  })(req, res, next);
+};
+
+exports.logoutUser = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    console.log("User logged out.");
+    return res.json({
+      logout: true,
+      user: null,
+    });
+  });
+};
 
 exports.signupUser = async (req, res, next) => {
-  const { fullname, email, username, password, confirmPassword } = req.body;
+  const { fullname, email, username, password } = req.body;
   try {
     await userService.addNewUser(fullname, email, username, password);
-    await useMiddleware(req, res, loginUser);
+    const user = await loginUserAfterSigningUp(req, res, next);
     res.json({
-      errors: null,
       message: "User created and logged in.",
-      user: req.user,
-      postsResponse: res.locals.postsResponse,
+      user: user,
     });
   } catch (error) {
     next(error);
@@ -25,30 +66,15 @@ exports.checkAuthentication = (req, res) => {
   return res.status(401).json(null);
 };
 
-exports.getDashboard = async (req, res, next) => {
-  try {
-    const data = await userService.getDashboardData(
-      req.isAuthenticated(),
-      req.user,
-    );
-    res.json({ errors: null, ...data });
-  } catch (error) {
-    error.message = "Failed to fetch dashboard data.";
-    next(error);
-  }
-};
-
-exports.authorizeUser = async (req, res, next) => {
+exports.promoteToMember = async (req, res, next) => {
   try {
     if (!req.isAuthenticated()) {
       throw new Error("Not authenticated. Access denied.");
     }
-    const data = await userService.promoteToMember(
-      req.isAuthenticated(),
-      req.user,
-    );
+    await userService.promoteToMember(req.user);
+    req.user.ismember = true;
     console.log("Member status changed: ", req.user);
-    res.json({ errors: null, ...data });
+    res.json({ user: req.user });
   } catch (error) {
     next(error);
   }

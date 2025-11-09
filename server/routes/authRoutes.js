@@ -1,20 +1,15 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
 const loginValidation = require("../middlewares/validation/loginValidation");
+const signupValidation = require("../middlewares/validation/signupValidation");
 const memberValidation = require("../middlewares/validation/memberValidation");
-const loginUser = require("../middlewares/auth/loginUser");
-const logoutUser = require("../middlewares/auth/logoutUser");
 
 const router = Router();
 
 router.get("/", userController.checkAuthentication);
-router.get("/logout", logoutUser, userController.getDashboard);
-router.post(
-  "/login",
-  loginValidation(),
-  loginUser,
-  userController.getDashboard,
-);
-router.patch("/member", memberValidation(), userController.authorizeUser);
+router.get("/logout", userController.logoutUser);
+router.post("/login", loginValidation(), userController.loginUser);
+router.post("/signup", signupValidation(), userController.signupUser);
+router.patch("/member", memberValidation(), userController.promoteToMember);
 
 module.exports = router;

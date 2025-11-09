@@ -5,7 +5,6 @@ const passport = require("passport");
 
 const postRoutes = require("./routes/postRoutes");
 const authRoutes = require("./routes/authRoutes");
-const signupRoutes = require("./routes/signupRoutes");
 
 const sessionConfig = require("./config/session");
 const initializePassport = require("./config/passport");
@@ -33,7 +32,6 @@ app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
 app.use("/api", postRoutes);
-app.use("/api/users", signupRoutes);
 
 app.use((err, req, res, next) => {
   console.log("Global epxress error-handler", err);
