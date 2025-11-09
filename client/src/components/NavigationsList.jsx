@@ -6,15 +6,15 @@ export default function NavigationsList({ className, user, handleLogout }) {
   return (
     <div className={className}>
       {user && !user?.ismember && (
-        <CustomLink clsName="svg-nav-wrapper" to="members/login">
+        <CustomLink className="svg-nav-wrapper" to="members/login">
           <StarJoin className="star-join" />
         </CustomLink>
       )}
-      <CustomLink clsName="nav-link" to="/">
+      <CustomLink className="nav-link" to="/">
         Posts
       </CustomLink>
       {user && (
-        <CustomLink clsName="nav-link" to="submit">
+        <CustomLink className="nav-link" to="submit">
           <div className="add-post">
             <span>Create</span>
             <AddSign className="add-sign" />
@@ -22,11 +22,11 @@ export default function NavigationsList({ className, user, handleLogout }) {
         </CustomLink>
       )}
       {user ? (
-        <CustomLink clsName="nav-link" to="/" onClick={handleLogout}>
+        <CustomLink className="nav-link" to="/" onClick={handleLogout}>
           Log out
         </CustomLink>
       ) : (
-        <CustomLink clsName="nav-link" to="login">
+        <CustomLink className="nav-link" to="login">
           Log in
         </CustomLink>
       )}

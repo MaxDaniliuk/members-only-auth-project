@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
+import { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { useMutation } from '@tanstack/react-query';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -21,6 +21,28 @@ export default function Signup() {
     password: null,
     confirmPassword: null,
     generalMessage: null,
+  });
+
+  const mutation = useMutation({
+    mutationFn: signupUser,
+    onSuccess: data => {
+      dispatch({ type: 'LOGIN', payload: data.user });
+      navigate('/');
+    },
+    onError: error => {
+      if (error?.errors) {
+        setErrors(prevState => ({
+          ...prevState,
+          ...error?.errors,
+        }));
+      } else {
+        setErrors(prevState => ({
+          ...prevState,
+          generalMessage:
+            error.message || 'Something went wrong. Please try again later.',
+        }));
+      }
+    },
   });
 
   function confirmFieldsValidity(latestFormData) {
@@ -238,51 +260,8 @@ export default function Signup() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsDisabled(true);
-    try {
-      const res = await fetch('/api/user/signup', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch (error) {
-        setErrors({
-          ...errors,
-          generalMessage:
-            'Unexpected response from server. Please try again later.',
-        });
-        return;
-      }
-
-      if (!res.ok) {
-        if (data?.errors) {
-          setErrors(data.errors);
-        } else {
-          setErrors({
-            ...errors,
-            generalMessage:
-              data?.message ||
-              'Unexpected server response. Please try again later.',
-          });
-        }
-        return;
-      }
-
-      console.log('Form submitted successfully!');
-      dispatch({ type: 'LOGIN', payload: data.user });
-      navigate('/');
-    } catch (error) {
-      setErrors({
-        ...errors,
-        generalMessage:
-          error.message ||
-          'Could not connect to the server. Please check your internet connection.',
-      });
-    }
+    setErrors(prevState => ({ ...prevState, generalMessage: null }));
+    mutation.mutate(formData);
   }
 
   return (
@@ -308,11 +287,7 @@ export default function Signup() {
             placeholder="Full Name"
             onChange={validateFullnameOnChange}
           />
-          <span
-            className={
-              errors.fullname ? 'error-wrapper invalid' : 'error-wrapper'
-            }
-          >
+          <span className={`error-wrapper ${errors.fullname ? 'invalid' : ''}`}>
             {errors.fullname}
           </span>
           <input
@@ -325,9 +300,7 @@ export default function Signup() {
             onChange={validateEmailOnChange}
           />
 
-          <span
-            className={errors.email ? 'error-wrapper invalid' : 'error-wrapper'}
-          >
+          <span className={`error-wrapper ${errors.email ? 'invalid' : ''}`}>
             {errors.email}
           </span>
 
@@ -341,11 +314,7 @@ export default function Signup() {
             onChange={validateUsernameOnChange}
           />
 
-          <span
-            className={
-              errors.username ? 'error-wrapper invalid' : 'error-wrapper'
-            }
-          >
+          <span className={`error-wrapper ${errors.username ? 'invalid' : ''}`}>
             {errors.username}
           </span>
 
@@ -359,11 +328,7 @@ export default function Signup() {
             onChange={validatePasswordOnChange}
           />
 
-          <span
-            className={
-              errors.password ? 'error-wrapper invalid' : 'error-wrapper'
-            }
-          >
+          <span className={`error-wrapper ${errors.password ? 'invalid' : ''}`}>
             {errors.password}
           </span>
 
@@ -379,16 +344,13 @@ export default function Signup() {
           />
 
           <span
-            className={
-              errors.confirmPassword ? 'error-wrapper invalid' : 'error-wrapper'
-            }
+            className={`error-wrapper ${errors.confirmPassword ? 'invalid' : ''}`}
           >
             {errors.confirmPassword}
           </span>
-
-          <Button specClass={'signup'} disabled={isDisabled}>
-            Sign up
-          </Button>
+          <button className="signup" type="submit" disabled={isDisabled}>
+            {mutation.isPending ? 'Signing up...' : 'Sign up'}
+          </button>
           {errors.generalMessage && (
             <p className="general-err-msg">{errors.generalMessage}</p>
           )}
@@ -401,4 +363,39 @@ export default function Signup() {
       </div>
     </section>
   );
+}
+
+async function signupUser({
+  fullname,
+  email,
+  username,
+  password,
+  confirmPassword,
+}) {
+  const res = await fetch('/api/auth/signup', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      fullname,
+      email,
+      username,
+      password,
+      confirmPassword,
+    }),
+  });
+
+  const data = await res.json().catch(() => {
+    throw new Error('Unexpected response from server. Please try again later.');
+  });
+
+  if (!res.ok) {
+    throw {
+      message:
+        data?.message || 'Unexpected server response. Please try again later.',
+      errors: data?.errors || null,
+    };
+  }
+
+  return data;
 }

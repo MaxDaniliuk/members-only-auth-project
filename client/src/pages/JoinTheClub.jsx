@@ -1,18 +1,32 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { usePostsContext } from '../hooks/usePostsContext';
-import Button from '../components/Button';
+import { useMutation } from '@tanstack/react-query';
 
 export default function JoinTheClub() {
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
-  const { dispatch: postsDispatch } = usePostsContext();
   const [isDisabled, setIsDisabled] = useState(true);
   const [formInput, setFormInput] = useState({
     passcode: '',
   });
   const [error, setError] = useState(null);
+
+  const mutation = useMutation({
+    mutationFn: promoteToMember,
+    onSuccess: data => {
+      dispatch({ type: 'LOGIN', payload: data.user });
+      navigate('/');
+    },
+    onError: error => {
+      console.log(error);
+      if (error?.errors) {
+        setError(error.errors);
+      } else {
+        setError(error.message);
+      }
+    },
+  });
 
   function handleOnChange(e) {
     const value = e.target.value.trim();
@@ -35,42 +49,8 @@ export default function JoinTheClub() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsDisabled(true);
-    try {
-      const res = await fetch('/api/auth/member', {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formInput),
-      });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch (error) {
-        setError(
-          error.message ||
-            'Data parsing failed... Check the issue on the server',
-        );
-        return;
-      }
-      if (!res.ok) {
-        if (data?.error) {
-          setError(data.error);
-        } else {
-          setError(
-            data?.message ||
-              'Unexpected server response. Please try again later.',
-          );
-        }
-        return;
-      }
-
-      dispatch({ type: 'LOGIN', payload: data.user });
-      postsDispatch({ type: 'SUCCESS', payload: data.postsResponse });
-      navigate('/');
-    } catch (error) {
-      setError('Something went wrong. Please try again.');
-    }
+    setError(null);
+    mutation.mutate(formInput);
   }
 
   return (
@@ -89,12 +69,34 @@ export default function JoinTheClub() {
             placeholder="Enter secret passcode"
             onChange={handleOnChange}
           />
-          <Button specClass={'join'} disabled={isDisabled}>
-            Join the club
-          </Button>
+          <button className="join" type="submit" disabled={isDisabled}>
+            {mutation.isPending ? 'Authorizing...' : 'Join the club'}
+          </button>
           {error && <p className="general-err-msg">{error}</p>}
         </form>
       </div>
     </section>
   );
+}
+
+async function promoteToMember({ passcode }) {
+  const res = await fetch('/api/auth/member', {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ passcode }),
+  });
+
+  const data = await res.json().catch(() => {
+    throw new Error('Something went wrong. Please try again.');
+  });
+
+  if (!res.ok) {
+    throw {
+      message: data?.message || 'Something went wrong. Please try again later.',
+      errors: data?.error || null,
+    };
+  }
+
+  return data;
 }

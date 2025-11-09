@@ -646,7 +646,7 @@ form input::placeholder {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1680px) {
   :root {
     font-size: 21px;
   }
@@ -657,7 +657,7 @@ form input::placeholder {
   }
 }
 
-@media (min-width: 2000px) {
+@media (min-width: 2560px) {
   :root {
     font-size: 27px;
   }

@@ -10,7 +10,6 @@ export const authReducer = (state, action) => {
       return { ...state, user: null };
     case 'LOADED':
       return { ...state, user: action.payload, isLoaded: true };
-    // ....
     default:
       return state;
   }
@@ -25,7 +24,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     async function checkAuthStatus() {
       try {
-        const res = await fetch('/api/auth/user', { credentials: 'include' });
+        const res = await fetch('/api/auth', { credentials: 'include' });
         const user = await res.json();
         dispatch({ type: 'LOADED', payload: user });
       } catch (error) {
@@ -36,8 +35,6 @@ export const AuthContextProvider = ({ children }) => {
 
     checkAuthStatus();
   }, []);
-
-  console.log('AuthContext state:', state);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

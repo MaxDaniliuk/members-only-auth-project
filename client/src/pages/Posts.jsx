@@ -1,31 +1,45 @@
+import { useQuery } from '@tanstack/react-query';
+import { useAuthContext } from '../hooks/useAuthContext';
 import Post from '../components/Post';
 import Loading from '../assets/images/loading.svg?react';
-import { usePostsContext } from '../hooks/usePostsContext';
 
 export default function Posts() {
-  const { postsState } = usePostsContext();
+  const { user } = useAuthContext();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['posts'],
+    queryFn: fetchPosts,
+  });
 
   return (
     <section className="posts-page">
-      {postsState.loading ? (
+      {isLoading ? (
         <span>
           <Loading className="loading-posts spin" />
         </span>
-      ) : postsState.error ? (
-        <span>{postsState.error}</span>
-      ) : postsState.message ? (
-        <p>{postsState.message}</p>
+      ) : error ? (
+        <span>{error.message}</span>
+      ) : data?.posts.length < 1 ? (
+        <p>There are no posts yet!</p>
       ) : (
         <ul className="posts">
-          {postsState.postsResponse.posts.map(post => (
-            <Post
-              key={post.post_id}
-              post={post}
-              authorized={postsState.postsResponse.authorized}
-            />
+          {data?.posts.map(post => (
+            <Post key={post.post_id} post={post} user={user} />
           ))}
         </ul>
       )}
     </section>
   );
 }
+
+const fetchPosts = async () => {
+  const res = await fetch('/api/');
+
+  const data = await res.json().catch(() => {
+    throw new Error('Unexpected server response. Failed to fetch posts.');
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch posts. Please try again later.');
+  }
+  return data;
+};
