@@ -2,6 +2,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useMutation } from '@tanstack/react-query';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -372,7 +375,7 @@ async function signupUser({
   password,
   confirmPassword,
 }) {
-  const res = await fetch('/api/auth/signup', {
+  const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },

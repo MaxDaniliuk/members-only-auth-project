@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useMutation } from '@tanstack/react-query';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function JoinTheClub() {
   const navigate = useNavigate();
@@ -80,7 +83,7 @@ export default function JoinTheClub() {
 }
 
 async function promoteToMember({ passcode }) {
-  const res = await fetch('/api/auth/member', {
+  const res = await fetch(`${API_BASE_URL}/api/auth/member`, {
     method: 'PATCH',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },

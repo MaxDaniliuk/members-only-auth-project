@@ -1,5 +1,7 @@
 import { createContext, useReducer, useEffect } from 'react';
+import getBaseURL from '../utils/getBaseURL';
 
+const API_BASE_URL = getBaseURL();
 export const AuthContext = createContext();
 
 export const authReducer = (state, action) => {
@@ -24,7 +26,9 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     async function checkAuthStatus() {
       try {
-        const res = await fetch('/api/auth', { credentials: 'include' });
+        const res = await fetch(`${API_BASE_URL}/api/auth`, {
+          credentials: 'include',
+        });
         const user = await res.json();
         dispatch({ type: 'LOADED', payload: user });
       } catch (error) {

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Create() {
   const navigate = useNavigate();
@@ -125,7 +128,7 @@ export default function Create() {
 }
 
 async function createPost({ title, post }) {
-  const res = await fetch('/api/post', {
+  const res = await fetch(`${API_BASE_URL}/api/post`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },

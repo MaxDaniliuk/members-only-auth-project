@@ -12,8 +12,16 @@ const initializePassport = require("./config/passport");
 const PORT = process.env.PORT;
 const app = express();
 
+const allowedOrigins = process.env.ORIGIN.split(",");
 const corsOptions = {
-  origin: process.env.ORIGIN,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],

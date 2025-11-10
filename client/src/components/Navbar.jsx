@@ -4,6 +4,9 @@ import CloseDropdownButton from '../assets/images/close-nav-button.svg?react';
 import CustomLink from './CustomLink';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useEffect, useState } from 'react';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Navbar() {
   const { user, isLoaded, dispatch } = useAuthContext();
@@ -32,7 +35,7 @@ export default function Navbar() {
 
   async function handleLogout() {
     try {
-      const res = await fetch('/api/auth/logout', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         credentials: 'include',
       });
       const result = await res.json();

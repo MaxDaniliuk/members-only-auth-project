@@ -7,29 +7,29 @@ import {
 
 import RootLayout from './layouts/RootLayout';
 
-import Posts from './pages/Posts';
-import Create from './pages/Create';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import JoinTheClub from './pages/JoinTheClub';
-import NotFound from './pages/NotFound';
+import PostsPage from './pages/Posts';
+import CreatePage from './pages/Create';
+import LoginPage from './pages/Login';
+import SignupPage from './pages/Signup';
+import JoinTheClubPage from './pages/JoinTheClub';
+import NotFoundPage from './pages/NotFound';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<Posts />} />
-      <Route path="login" element={<Login />} />
-      <Route path="accounts/signup" element={<Signup />} />
+      <Route index element={<PostsPage />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route path="accounts/signup" element={<SignupPage />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="submit" element={<Create />} />
+        <Route path="submit" element={<CreatePage />} />
       </Route>
 
       <Route element={<ProtectedRoute requireNonMember />}>
-        <Route path="members/login" element={<JoinTheClub />} />
+        <Route path="members/login" element={<JoinTheClubPage />} />
       </Route>
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Route>,
   ),
 );

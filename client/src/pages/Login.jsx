@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useMutation } from '@tanstack/react-query';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Login() {
   const navigate = useNavigate();
@@ -135,7 +138,7 @@ export default function Login() {
 }
 
 async function loginUser({ username, password }) {
-  const res = await fetch('/api/auth/login', {
+  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },

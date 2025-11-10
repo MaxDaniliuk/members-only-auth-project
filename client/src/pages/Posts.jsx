@@ -2,6 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Post from '../components/Post';
 import Loading from '../assets/images/loading.svg?react';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Posts() {
   const { user } = useAuthContext();
@@ -32,7 +35,7 @@ export default function Posts() {
 }
 
 const fetchPosts = async () => {
-  const res = await fetch('/api/');
+  const res = await fetch(`${API_BASE_URL}/api/`, { credentials: 'include' });
 
   const data = await res.json().catch(() => {
     throw new Error('Unexpected server response. Failed to fetch posts.');

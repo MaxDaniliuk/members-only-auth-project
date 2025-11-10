@@ -4,6 +4,9 @@ import { format, parseISO } from 'date-fns';
 import noImage from '../assets/images/noimage.jpg';
 import Trashcan from '../assets/images/trashcan.svg?react';
 import DrowdownArrow from '../assets/images/dropdown_arrow.svg?react';
+import getBaseURL from '../utils/getBaseURL';
+
+const API_BASE_URL = getBaseURL();
 
 export default function Post({ post, user }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -57,7 +60,9 @@ export default function Post({ post, user }) {
   return (
     <li className="post-wrapper" data-post-id={post.post_id}>
       <div>
-        {user?.ismember && <p className="name">{`By ${post.username}`}</p>}
+        {user?.ismember && post?.username && (
+          <p className="name">{`By ${post.username}`}</p>
+        )}
         {user?.ismember && post?.created_at && (
           <p className="date">
             {`Posted: ${format(parseISO(post.created_at), 'yyyy-MM-dd, HH:mm')}`}
@@ -88,7 +93,7 @@ export default function Post({ post, user }) {
           )}
         </div>
       </div>
-      {user && user?.isadmin && (
+      {user?.isadmin && (
         <button type="button" className="delete-button">
           <Trashcan className="trashcan" onClick={deletePost} />
         </button>
@@ -98,7 +103,7 @@ export default function Post({ post, user }) {
 }
 
 async function deletePostById(post_id) {
-  const res = await fetch(`/api/posts/${post_id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/posts/${post_id}`, {
     method: 'DELETE',
     credentials: 'include',
   });
