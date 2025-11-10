@@ -12,7 +12,7 @@ import Create from './pages/Create';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import JoinTheClub from './pages/JoinTheClub';
-import NotFound from './pages/notFound';
+import NotFound from './pages/NotFound';
 
 import ProtectedRoute from './routes/ProtectedRoute';
 
