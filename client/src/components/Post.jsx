@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
-import noImage from '../assets/images/noImage.jpg';
+import noImage from '../assets/images/noimage.jpg';
 import Trashcan from '../assets/images/trashcan.svg?react';
 import DrowdownArrow from '../assets/images/dropdown_arrow.svg?react';
 
