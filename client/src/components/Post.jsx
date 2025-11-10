@@ -13,13 +13,18 @@ export default function Post({ post, user }) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: deletePostById,
-    onSuccess: (_, post_id) => {
+    onMutate: post_id => {
       queryClient.setQueryData(['posts'], oldData => {
         if (!oldData) return oldData;
         return {
           ...oldData,
           posts: oldData.posts.filter(p => p.post_id !== post_id),
         };
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['posts'],
       });
     },
     onError: error => {
