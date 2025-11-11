@@ -9,7 +9,7 @@ A full-stack web application that demonstrates user authentication, access contr
 
 ## 🚀 Features
 
-- 🔐 Secure authentication using **Passport.js** (passport-local strategy)
+- 🔐 User authentication using **Passport.js** (passport-local strategy)
 - 🧾 Role-based access control for members and non-members
 - 💬 Logged-in users can create posts
 - ⭐ Members can see post details like who created a post and when
