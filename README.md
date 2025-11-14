@@ -7,6 +7,63 @@ A full-stack web application that demonstrates user authentication, access contr
 ---
 <br>
 
+## 📑 Table of Contents
+- [🚀 Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [⚙️ Installation](#️-installation--setup)
+- [🤝 Contributing](#-contributing)
+- [☁️ Deployment](#-deployment)
+- [🧾 License](#-license)
+- [📬 Contact](#-contact)
+- [🌟 Acknowledgments](#-acknowledgments)
+
+<br>
+
+## 🖼️ Project Screenshots
+<details>
+  <summary><strong>🖼️ View Screenshots</strong></summary>
+  <br>
+  <table>
+    <tr>
+      <td align="center"><strong>🔐 Signup Page</strong></td>
+      <td align="center"><strong>🏠 Home/Posts Feed</strong></td>
+    </tr>
+    <tr>
+      <td align="right"><img src="./screenshots/signup.png" width="100%"></td>
+      <td align="left"><img src="./screenshots/feed.png" width="100%"></td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center"><strong>📱 Mobile view</strong>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>📕 Nav Closed</strong></td>
+      <td align="center"><strong>📖 Nav Opened</strong></td>
+    </tr>
+    <tr>
+      <td align="right"><img src="./screenshots/mobile_nav_closed.png" width="300"></td>
+      <td align="left"><img src="./screenshots/mobile_nav_opened.png" width="300"></td>
+    </tr>
+    <tr>
+      <td align="center"><strong>✍️ Create Post</strong></td>
+      <td align="center"><strong>⭐ Members feed</strong></td>
+    </tr>
+    <tr>
+      <td align="right"><img src="./screenshots/create_post.png" width="100%"></td>
+      <td align="left"><img src="./screenshots/members_feed.png" width="100%"></td>
+    </tr>
+    <tr>
+      <td align="center"><strong>🛡️ Admin feed</strong></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td align="right"><img src="./screenshots/admin_feed.png" width="100%"></td>
+      <td></td>
+    </tr>
+  </table>
+</details>
+<br>
+
 ## 🚀 Features
 
 - 🔐 User authentication using **Passport.js** (passport-local strategy)
